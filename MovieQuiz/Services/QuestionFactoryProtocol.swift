@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+protocol QuestionFactoryProtocol {
+    func requestNextQuestion() -> QuizQuestion?
+}
+
+
+class QuestionFactory: QuestionFactoryProtocol {
+    
+    private let questionFactory: QuestionFactoryProtocol = QuestionFactory()
+}
