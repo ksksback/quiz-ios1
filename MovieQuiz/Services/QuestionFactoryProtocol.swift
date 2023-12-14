@@ -8,11 +8,8 @@
 import Foundation
 
 protocol QuestionFactoryProtocol {
-    func requestNextQuestion() -> QuizQuestion?
+    func requestNextQuestion()
+    var delegate: QuestionFactoryDelegate? {get set}
 }
 
 
-class QuestionFactory: QuestionFactoryProtocol {
-    
-    private let questionFactory: QuestionFactoryProtocol = QuestionFactory()
-}

@@ -7,7 +7,7 @@
 
 import Foundation
 
-private struct QuestionResultsViewModel {
+struct QuestionResultsViewModel {
     let title: String
     let text: String
     let buttonText: String
