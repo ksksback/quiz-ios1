@@ -6,32 +6,16 @@
 //
 
 import Foundation
-
-//class QuestionFactory {
-//    func requestNextQuestion()
-//}
     
 final class QuestionFactory: QuestionFactoryProtocol {
     func requestNextQuestion() {
         guard let question = questions.randomElement() else{
-            assertionFailure("question is empty")
+            return assertionFailure("question is empty")
         }
-        
         delegate?.didReceiveNextQuestion(question: question)
     }
-    
-    
     weak var delegate: QuestionFactoryDelegate?
-    
-//    init(delegate: QuestionFactoryDelegate?) {
-//        self.delegate = delegate
-//    }
-    
 }
-
-//extension QuestionFactory {
-//    
-//}
 
 private let questions: [QuizQuestion] = [
         QuizQuestion(

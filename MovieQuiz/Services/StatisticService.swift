@@ -20,7 +20,6 @@ final class StatisticServiceImplementation{
     private enum Keys: String {
             case correct, total, bestGame, gamesCount
         }
-    
     private let userDefaults: UserDefaults
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder

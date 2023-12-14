@@ -43,7 +43,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        <#code#>
+        guard let question else { return }
+                currentQuestion = question
+                let viewModel = convert(model: question)
+                DispatchQueue.main.async { [weak self] in
+                    self?.show(quiz: viewModel)
+                }
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -85,9 +90,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showFinalResults(){
-        
         statisticService.store(correct: correctAnswers, total: questionsCount)
-        
         let alertModel = AlertModel(
             title: "Игра окончена! ",
             message: makeResultMessage(),
@@ -98,7 +101,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 self?.questionFactory.requestNextQuestion()
             }
         )
-        
         alertPresenter.show(alertModel: alertModel, viewController: self)
     }
     
@@ -118,15 +120,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
 }
 
-
-//extension MovieQuizViewController: QuestionFactoryDelegate {
-//
-//    func didReceiveQuestion(_ question: QuizQuestion) {
-//        self.currentQuestion = question
-//        let viewModel = self.convert(model: question)
-//        self.show(quiz: viewModel)
-//    }
-//}
 
 
 
