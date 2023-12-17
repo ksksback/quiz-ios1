@@ -1,7 +1,13 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
-
+    
+    @IBOutlet private var imageView: UIImageView!
+    @IBOutlet private var textLabel: UILabel!
+    @IBOutlet private var counterLabel: UILabel!
+    @IBOutlet weak var yesButton: UIButton!
+    @IBOutlet weak var noButton: UIButton!
+    
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
     private let questionsCount = 10
@@ -10,45 +16,27 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var alertPresenter: AlertPresenterProtocol = AlertPresenter()
     private var statisticService: StatisticService = StatisticServiceImplementation()
     
-    
-    @IBOutlet private var imageView: UIImageView!
-    
-    @IBOutlet private var textLabel: UILabel!
-    
-    @IBOutlet private var counterLabel: UILabel!
-    
-    
-    @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        
-        let givenAnswer = true
-        
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion?.correctAnswer)
-    }
-    
-    @IBAction private func noButtonClicked(_ sender: UIButton) {
-        
-        let givenAnswer = false
-        
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion?.correctAnswer)
-    }
-    
     // MARK: - Lifecycle
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         currentQuestionIndex = 0
-    
+        
         questionFactory.delegate = self
         questionFactory.requestNextQuestion()
     }
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question else { return }
-                currentQuestion = question
-                let viewModel = convert(model: question)
-                DispatchQueue.main.async { [weak self] in
-                    self?.show(quiz: viewModel)
-                }
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        DispatchQueue.main.async { [weak self] in
+            self?.show(quiz: viewModel)
+        }
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -64,17 +52,28 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
         imageView.layer.borderColor = UIColor.clear.cgColor
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
     }
     
     private func showAnswerResult(isCorrect: Bool) {
+        yesButton.isEnabled = false
+        noButton.isEnabled = false
+        
+        if isCorrect {
+            correctAnswers += 1
+        }
+        
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 6
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.showNextQuestionOrResults()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else {
+                return
+            }
         }
+        self.showNextQuestionOrResults()
     }
     
     private func showNextQuestionOrResults() {
@@ -118,6 +117,22 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let resultMessage = components.joined(separator: "\n")
         return resultMessage
     }
+    
+    @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        
+        let givenAnswer = true
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion?.correctAnswer)
+    }
+    
+    @IBAction private func noButtonClicked(_ sender: UIButton) {
+        
+        let givenAnswer = false
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion?.correctAnswer)
+    }
+    
+    
 }
 
 
