@@ -12,9 +12,9 @@ protocol AlertPresenterProtocol{
 }
 
 final class AlertPresenter: AlertPresenterProtocol{
-    private var presenter: MovieQuizPresenter!
+    private var presenter: MovieQuizPresenter?
     func show(alertModel: AlertModel, viewController: UIViewController) {
-        let message = presenter.makeResultMessage()
+        let message = presenter?.makeResultMessage()
         let alert = UIAlertController(
             title: alertModel.title,
             message: message,
@@ -22,7 +22,7 @@ final class AlertPresenter: AlertPresenterProtocol{
         )
         let action = UIAlertAction(title: alertModel.buttonText, style: .default) { _ in
                         alertModel.buttonAction()
-            self.presenter.restartGame()
+            self.presenter?.restartGame()
         }
         alert.addAction(action)
         viewController.present(alert, animated: true, completion: nil)

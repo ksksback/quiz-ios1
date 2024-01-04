@@ -26,7 +26,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         hideLoadingIndicator()
     }
     
-    func didReceiveNextQuestion(question: QuizQuestion?) {
+    private func didReceiveNextQuestion(question: QuizQuestion?) {
         presenter.didReceiveNextQuestion(question: question)
     }
     

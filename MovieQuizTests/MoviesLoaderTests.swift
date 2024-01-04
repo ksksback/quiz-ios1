@@ -8,38 +8,27 @@
 import XCTest
 @testable import MovieQuiz
 
-class MoviesLoaderTests: XCTestCase {
+final class MoviesLoaderTests: XCTestCase {
     func testSuccessLoading() throws {
-        // Given
         let loader = MoviesLoader()
-        
-        // When
-        
-        // так как функция загрузки фильмов — асинхронная, нужно ожидание
         let expectation = expectation(description: "Loading expectation")
         
         loader.loadMovies { result in
-            // Then
             switch result {
             case .success(_):
-                // сравниваем данные с тем, что мы предполагали
                 expectation.fulfill()
             case .failure(_):
-                // мы не ожидаем, что пришла ошибка; если она появится, надо будет провалить тест
-                XCTFail("Unexpected failure") // эта функция проваливает тест
+                XCTFail("Unexpected failure")
             }
         }
-       
-       waitForExpectations(timeout: 1)
+        waitForExpectations(timeout: 1)
     }
     
     struct StubNetworkClient: NetworkRouting {
-        
-        enum TestError: Error { // тестовая ошибка
-        case test
+        enum TestError: Error {
+            case test
         }
-        
-        let emulateError: Bool // этот параметр нужен, чтобы заглушка эмулировала либо ошибку сети, либо успешный ответ
+        let emulateError: Bool
         
         func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
             if emulateError {
@@ -85,11 +74,8 @@ class MoviesLoaderTests: XCTestCase {
     }
     
     func testFailureLoading() throws {
-        // Given
-        let stubNetworkClient = StubNetworkClient(emulateError: true) // говорим, что хотим эмулировать ошибку
+        let stubNetworkClient = StubNetworkClient(emulateError: true)
         let loader = MoviesLoader(networkClient: stubNetworkClient)
-        
-        // When
         let expectation = expectation(description: "Loading expectation")
         
         loader.loadMovies { result in
@@ -102,7 +88,6 @@ class MoviesLoaderTests: XCTestCase {
                 XCTFail("Unexpected failure")
             }
         }
-        
         waitForExpectations(timeout: 1)
     }
 }
